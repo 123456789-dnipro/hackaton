@@ -39,4 +39,4 @@ async def get_pool():
         }
         await pg.init(db_creds)
         #pool = await asyncpgsa.create_pool(db_creds)
-    return
+    return 1

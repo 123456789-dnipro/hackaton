@@ -15,7 +15,7 @@ api.load_api(app)
 
 @app.listener('before_server_start')
 async def setup_db(app, loop):
-    await get_pool()
+    app.pool = await get_pool()
     await redis.init(app)
 
 
