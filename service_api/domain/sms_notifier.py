@@ -1,9 +1,12 @@
-from constans import login, password, send_sms_header
 from urllib.parse import urlencode
-from constans import send_sms_path
+
 import aiohttp
 from jinja2 import Environment, FileSystemLoader
 from sanic.log import logger
+
+from constans import login, password, send_sms_header
+from constans import send_sms_path
+
 
 class SMSNotifier:
     def __init__(self, mode, phone, code=None, car_number=None):
@@ -17,12 +20,12 @@ class SMSNotifier:
         env = Environment(loader=file_loader)
         template = env.get_template(f'{self.mode}_template.xml')
 
-        t = template.render(username=login,
-                            password=password,
+        t = template.render(username=str(login),
+                            password=str(password),
                             code=self.code,
-                            msg_id=1231231,
-                            phone_number=self.phone,
-                            car_number=self.car_number)
+                            msg_id=str(1231231),
+                            phone_number=str(self.phone),
+                            car_number=str(self.car_number))
         return t
 
     async def translate_sms_message(self, template):

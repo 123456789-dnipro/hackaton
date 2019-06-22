@@ -20,4 +20,8 @@ class BaseResource(HTTPMethodView):
 class SmokeResource(HTTPMethodView):
 
     async def get(self, request):
+        from service_api.sms_notification.send_sms import SMSNotifier
+        a = SMSNotifier('registration', '380996552733', '111111', 'AE7777HH')
+        await a.send_sms_message()
+
         return json({'hello': 'world'})
