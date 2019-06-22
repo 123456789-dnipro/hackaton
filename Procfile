@@ -1,1 +1,2 @@
-web: gunicorn service_api.app:app --worker-class sanic.worker.GunicornWorker
+migrate: alembic upgrade head
+web: python manage.py runserver

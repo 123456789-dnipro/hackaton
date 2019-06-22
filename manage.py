@@ -11,12 +11,16 @@ manager = Manager(app)
 
 @manager.option('-h', '--host', dest='host')
 def runserver(host='0.0.0.0'):
-    app.run(host=host, port=int(os.environ.get('PORT', 8000)), workers=int(os.environ.get('WEB_CONCURRENCY', 1)))
-
-
-@manager.command
-def setup_db():
-    asyncio.run(init_db(app))
+    app.run(
+        host='0.0.0.0',
+        port=int(os.environ.get('PORT', 8000)),
+        workers=int(os.environ.get('WEB_CONCURRENCY', 1)),
+        debug=bool(os.environ.get('DEBUG', '')))
+#
+#
+# @manager.command
+# def setup_db():
+#     asyncio.run(init_db(app))
 
 
 if __name__ == '__main__':
