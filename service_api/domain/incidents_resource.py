@@ -8,16 +8,19 @@ from service_api.domain.decorators import prepare_coordinates
 
 
 class IncidentsResource(BaseResource):
-    decorators = [prepare_coordinates]
+    decorators = []
 
+    @prepare_coordinates
     async def get(self, request, longitude, latitude):
         incidents = Incedent.get_incidents(request.headers, longitude, latitude)
         return json(incidents, HTTPStatus.OK)
 
-    async def post(self, request, longitude, latitude):
+    async def post(self, request):
         image = request.files.get('image')
         car_number = request.form.get('plate_number')
         comments = request.form.get('comments')
+        longitude = float(request.form.get('lon'))
+        latitude = float(request.form.get('lat'))
         incident, status = await Incedent(headers=request.headers).report_incident(
                                                     longitude=longitude,
                                                     latitude=latitude, image=image,
