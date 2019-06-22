@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SMS>
+    <operations>
+        <operation>SEND</operation>
+    </operations>
+    <authentification>
+        <username>{{ username }}</username>
+        <password>{{ password }}</password>
+    </authentification>
+    <message>
+        <sender>SMS</sender>
+        <text>Пожалуйста, перепаркуйте свое транспортное средство с номером {{ car_number }}</text>
+    </message>
+    <numbers>
+        <number messageID="{{ msg_id }}">{{ phone_number }}</number>
+    </numbers>
+</SMS>
