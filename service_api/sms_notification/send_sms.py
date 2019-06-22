@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 from sanic.log import logger
 
 class SMSNotifier:
-    def __init__(self, mode, phone, code, car_number):
+    def __init__(self, mode, phone, code=None, car_number=None):
         self.phone = phone
         self.mode = mode
         self.code = code
@@ -37,3 +37,4 @@ class SMSNotifier:
                                     data=post_data,
                                     headers=send_sms_header) as resp:
                 logger.info(f"status: {resp.status} | text: {await resp.text()}")
+        return self.code if self.code else self.car_number
