@@ -9,7 +9,7 @@ class RedisWorker:
 
     async def init(self, app: Sanic):
         self.__host = app.config.REDIS_HOST
-        self.__pool = await aioredis.create_redis(f'redis://{self.__host}')
+        self.__pool = await aioredis.create_redis(self.__host)
 
     async def check_session(self, token):
         print(token)
