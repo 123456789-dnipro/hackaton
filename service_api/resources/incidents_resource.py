@@ -19,8 +19,8 @@ class IncidentsResource(BaseResource):
         image = request.files.get('image')
         car_number = request.form.get('plate_number')
         comments = request.form.get('comments')
-        longitude = float(request.form.get('lng'))
-        latitude = float(request.form.get('lat'))
+        longitude = float(request.form.get('lng')[0])
+        latitude = float(request.form.get('lat')[0])
         incident, status = await Incedent(headers=request.headers).report_incident(
                                                     longitude=longitude,
                                                     latitude=latitude, image=image,
