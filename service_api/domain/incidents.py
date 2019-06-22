@@ -2,12 +2,14 @@ import uuid
 from datetime import datetime
 
 from asyncpgsa import pg
+from sqlalchemy import and_
 from sanic.log import logger
 
 from service_api.domain.models import incedents
 from service_api.domain.models import vehicles, files
 from service_api.domain.sms_notifier import SMSNotifier
 from service_api.domain.redis import RedisWorker
+from service_api.domain.models import incedents, files
 
 
 async def get_incident(incident_id):
@@ -22,6 +24,7 @@ async def get_incident(incident_id):
         incident_dict = []
     return incident_dict
 
+
 async def get_phone_number(car_number):
     query = vehicles.select().where(vehicles.c.number == car_number)
     a = await pg.fetchrow(query)
@@ -30,15 +33,44 @@ async def get_phone_number(car_number):
     else:
         return dict(a).get('number')
 
+
 class Incedent:
     def __init__(self, headers):
-        self.headers = headers
+        self.headers = dict(headers)
 
-    async def get_incidents(self):
-        return 'OK'
-
-    async def change_incident_status(self, *args, **kwargs):
-        return 'OK'
+    async def get_incidents(self, longitude, latitude):
+        max_longitude = longitude + 0.01799
+        min_longitude = longitude - 0.01799
+        max_latitude = latitude + 0.01799
+        min_latitude = latitude - 0.01799
+        query = incedents.select().where(and_(
+            incedents.c.logituide <= max_longitude, incedents.c.logituide >= min_longitude, incedents.c.latitude <= max_latitude, incedents.c.latitude >= min_latitude
+        ))
+        incidents_obj_list = await pg.fetch(query)
+        incidents_list = []
+        if len(incidents_obj_list) > 5:
+            for incident_obj in incidents_obj_list[0: 5]:
+                incident_dict = dict(incident_obj)
+                query = files.select().where(files.c.id == incident_dict['id'])
+                file = await pg.fetchrow(query)
+                if file:
+                    incident_dict['photo'] = str(dict(file)['data'])
+                incident_dict['id'] = str(incident_dict['id'])
+                incident_dict['created_by'] = str(incident_dict['created_by'])
+                incident_dict['created_at'] = incident_dict['created_at'].strftime("%d/%m/%y")
+                incidents_list.append(dict(incident_dict))
+        else:
+            for incident_obj in incidents_obj_list:
+                incident_dict = dict(incident_obj)
+                query = files.select().where(files.c.id == incident_dict['id'])
+                file = await pg.fetchrow(query)
+                if file:
+                    incident_dict['photo'] = str(dict(file)['data'])
+                incident_dict['id'] = str(incident_dict['id'])
+                incident_dict['created_by'] = str(incident_dict['created_by'])
+                incident_dict['created_at'] = incident_dict['created_at'].strftime("%d/%m/%y")
+                incidents_list.append(dict(incident_dict))
+        return incidents_list
 
     async def report_incident(self, longitude=None, latitude=None, image=None, car_number=None,
                               comment=None):
@@ -56,11 +88,15 @@ class Incedent:
 
         return 'YES', 200
 
-    async def get_incident(incident_id):
+    async def get_incident(self, incident_id):
         query = incedents.select().where(incedents.c.id == incident_id)
         incident = await pg.fetchrow(query)
         if incident:
             incident_dict = dict(incident)
+            query = files.select().where(files.c.id == incident_dict['id'])
+            file = await pg.fetchrow(query)
+            if file:
+                incident_dict['photo'] = str(dict(file)['data'])
             incident_dict['id'] = str(incident_dict['id'])
             incident_dict['created_by'] = str(incident_dict['created_by'])
             incident_dict['created_at'] = incident_dict['created_at'].strftime("%d/%m/%y")
@@ -73,7 +109,7 @@ class Incedent:
                                           longitude_1=longitude,
                                           latitude_1=latitude,
                                           created_at=datetime.now(),
-                                          created_by=await RedisWorker().get_user(self.headers().get('Authorization')))
+                                          created_by=await RedisWorker().get_user(self.headers.get('Authorization')))
         await pg.fetchrow(query)
 
     async def save_files(self, incident_uuid, image=None, comment=None, passport_data=None):
@@ -81,5 +117,5 @@ class Incedent:
                                       name=uuid.uuid4(),
                                       data=image.body,
                                       passport_data=passport_data,
-                                      user_id=await RedisWorker().get_user(self.headers().get('Authorization')))
+                                      user_id=await RedisWorker().get_user(self.headers.get('Authorization')))
         await pg.fetchrow(query)
