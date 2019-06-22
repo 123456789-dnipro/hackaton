@@ -17,7 +17,7 @@ class LogInResource(BaseResource):
 
     async def post(self, request):
         data, _ = LogInForm().load(request.json)
-        if await data.get('conf_code'):
+        if data.get('conf_code'):
             return await self.__login(data)
 
         return await self.__registration(data)
