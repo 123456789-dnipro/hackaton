@@ -1,9 +1,9 @@
-from constans import login, password, phone_sms, msg_id, send_sms_header, send_sms_path
+from constans import login, password, phone_sms, send_sms_header
 from urllib.parse import urlencode
 from constans import send_sms_path
 import aiohttp
 from jinja2 import Environment, FileSystemLoader
-
+from sanic.log import logger
 
 class SMSNotifier:
     def __init__(self, mode, phone, code, car_number):
@@ -25,7 +25,7 @@ class SMSNotifier:
                             car_number=self.car_number)
         return t
 
-    async def translate_sms_message(self, template, *args, **kwargs):
+    async def translate_sms_message(self, template):
         return urlencode([('XML', template)])
 
     async def send_sms_message(self):
@@ -36,5 +36,4 @@ class SMSNotifier:
             async with session.post(send_sms_path,
                                     data=post_data,
                                     headers=send_sms_header) as resp:
-                print(resp.status)
-                print(await resp.text())
+                logger.info(f"status: {resp.status} | text: {await resp.text()}")
