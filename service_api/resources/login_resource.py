@@ -19,10 +19,7 @@ class LogInResource(BaseResource):
         data, _ = LogInForm().load(request.json)
         check_request = users.select().where(users.c.phone == data['phone'])
         if await pg.fetchrow(check_request):
-            if data.get('conf_code'):
-                return await self.__login(data)
-            else:
-                return text('Confirmation code not specified', 400)
+            return await self.__login(data)
 
         return await self.__registration(data)
 
