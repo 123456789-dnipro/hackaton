@@ -106,8 +106,8 @@ class Incedent:
 
     async def save_incident(self, incident_uuid, latitude, longitude, comment):
         query = incedents.insert().values(id=incident_uuid,
-                                          longitude_1=longitude,
-                                          latitude_1=latitude,
+                                          longitude=longitude,
+                                          latitude=latitude,
                                           created_at=datetime.now(),
                                           comment=comment,
                                           created_by=self.auth)
