@@ -33,10 +33,5 @@ class IncidentResource(BaseResource):
     decorators = []
 
     async def get(self, request, incident_id):
-        incident = await Incedent.get_incident(incident_id)
+        incident = await Incedent().get_incident(incident_id)
         return json(incident, HTTPStatus.OK)
-
-    async def put(self, request):
-        data, _ = IncidentsStatusForm().load(request.json)
-        incident, status = Incedent.change_incident_status(request.headers, data)
-        return json(incident, status)

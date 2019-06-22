@@ -26,9 +26,11 @@ incedents = Table('incedents', metadata,
                   Column('created_at', TIMESTAMP),
                   Column('created_by', UUID),
                   Column('longitude', FLOAT),
-                  Column('latitude', FLOAT))
+                  Column('latitude', FLOAT),
+                  Column('comment', VARCHAR))
 
 incedents_points = Table('incedents_points', metadata,
-                         Column('id', UUID, primary_key=True, unique=True))
+                         Column('id', UUID, primary_key=True, unique=True),
+                         Column('comment', VARCHAR))
 
 models = [users, files, vehicles, incedents, incedents_points]
