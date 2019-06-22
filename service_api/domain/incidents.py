@@ -50,8 +50,9 @@ class Incedent:
                             car_number=car_number)
             except:
                 logger.info('Failed to send SMS')
-        await self.save_incedent(latitude, longitude)
-        await self.save_files(image, comment)
+        incident_uuid = uuid.uuid4()
+        await self.save_incedent(incident_uuid, latitude, longitude)
+        await self.save_files(incident_uuid, image, comment)
 
         return 'YES', 200
 
@@ -67,16 +68,16 @@ class Incedent:
             incident_dict = []
         return incident_dict
 
-    async def save_incedent(self, latitude, longitude, ):
-        query = incedents.insert().values(id=uuid.uuid4(),
+    async def save_incedent(self, incident_uuid, latitude, longitude, ):
+        query = incedents.insert().values(id=incident_uuid,
                                           longitude_1=longitude,
                                           latitude_1=latitude,
                                           created_at=datetime.now(),
                                           created_by=await RedisWorker().get_user(self.headers().get('Authorization')))
         await pg.fetchrow(query)
 
-    async def save_files(self, image=None, comment=None, passport_data=None):
-        query = files.insert().values(id=uuid.uuid4(),
+    async def save_files(self, incident_uuid, image=None, comment=None, passport_data=None):
+        query = files.insert().values(id=incident_uuid,
                                       name=uuid.uuid4(),
                                       data=image.body,
                                       passport_data=passport_data,
