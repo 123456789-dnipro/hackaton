@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from sanic_script import Manager
 
@@ -9,9 +10,8 @@ manager = Manager(app)
 
 
 @manager.option('-h', '--host', dest='host')
-@manager.option('-p', '--port', dest='port')
-def runserver(host='0.0.0.0', port=5000):
-    app.run(host=host, port=port, debug=True)
+def runserver(host='0.0.0.0'):
+    app.run(host=host, port=int(os.environ.get('PORT', 8000)), workers=int(os.environ.get('WEB_CONCURRENCY', 1)))
 
 
 @manager.command
