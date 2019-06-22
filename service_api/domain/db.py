@@ -30,13 +30,13 @@ async def get_pool():
     from service_api.app import app
     pool = app.pool if hasattr(app, 'pool') else None
     if not pool:
-        db_creds = app.config.DB_URI or {
+        db_creds ={
             'user': app.config.DB_USER,
             'password': app.config.DB_PASSWORD,
             'host': app.config.DB_HOST,
             'port': app.config.DB_PORT,
             'database': app.config.DB_NAME,
         }
-        await pg.init(db_creds)
-        #pool = await asyncpgsa.create_pool(db_creds)
-    return 1
+        # await pg.init(db_creds)
+        pool = await asyncpgsa.create_pool(**db_creds)
+    return pool
