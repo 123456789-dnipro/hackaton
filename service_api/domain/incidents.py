@@ -68,7 +68,7 @@ class Incedent:
             incident_dict = []
         return incident_dict
 
-    async def save_incedent(self, incident_uuid, latitude, longitude, ):
+    async def save_incident(self, incident_uuid, latitude, longitude, ):
         query = incedents.insert().values(id=incident_uuid,
                                           longitude_1=longitude,
                                           latitude_1=latitude,
