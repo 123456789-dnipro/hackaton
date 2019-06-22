@@ -51,7 +51,7 @@ class Incedent:
             except:
                 logger.info('Failed to send SMS')
         incident_uuid = uuid.uuid4()
-        await self.save_incedent(incident_uuid, latitude, longitude)
+        await self.save_incident(incident_uuid, latitude, longitude)
         await self.save_files(incident_uuid, image, comment)
 
         return 'YES', 200
