@@ -5,16 +5,10 @@ from sanic import Sanic
 class RedisWorker:
     def __init__(self):
         self.__host = None
-        self.__port = None
-        self.__user = None
-        self.__password = None
         self.__pool = None
 
     async def init(self, app: Sanic):
         self.__host = app.config.REDIS_HOST
-        self.__port = app.config.REDIS_PORT
-        self.__user = app.config.REDIS_USER
-        self.__password = app.config.REDIS_PASSWORD
         self.__pool = await aioredis.create_redis(f'redis://{self.__host}')
 
     async def check_session(self, token):
