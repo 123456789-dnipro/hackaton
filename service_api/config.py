@@ -8,8 +8,7 @@ class AppConfig:
     DB_PORT = os.getenv('DB_PORT')
     DB_USER = os.getenv('DB_USER')
     DB_PASSWORD = os.getenv('DB_PASSWORD')
-    REDIS_HOST = os.getenv('REDIS_URL', 'localhost')
-
+    REDIS_HOST = os.getenv('REDIS_URL')
 
 class DevConfig(AppConfig):
     DEBUG = True
