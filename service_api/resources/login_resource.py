@@ -17,7 +17,8 @@ class LogInResource(BaseResource):
 
     async def post(self, request):
         data, _ = LogInForm().load(request.json)
-        if data.get('conf_code'):
+        q = users.c.phone == data['phone']
+        if await pg.fetchrow(q) is not None:
             return await self.__login(data)
 
         return await self.__registration(data)
@@ -28,12 +29,18 @@ class LogInResource(BaseResource):
             user = await pg.fetchrow(check_request)
             token = self.__create_token(data['phone'], data['conf_code'])
             user_id = user['id']
-            await redis.create_session(str(user_id), token)
+            token = await redis.create_session(str(user_id), token)
             data = {
                 'id': str(user_id),
                 'credentials': token
             }
             return json(data, 201)
+        else:
+            code = generate_sms()
+            await redis.set_conf_msg(data['phone'], code)
+            sms_notifier = SMSNotifier('registration', data['phone'], str(code))
+            await sms_notifier.send_sms_message()
+
         return text('Invalid confirmation code', 400)
 
     @staticmethod
