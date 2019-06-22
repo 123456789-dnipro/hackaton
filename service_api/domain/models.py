@@ -1,11 +1,8 @@
 from sqlalchemy import Column, Table
-from sqlalchemy.dialects.postgresql import UUID, VARCHAR, ARRAY, TIMESTAMP, INTEGER, BOOLEAN, BYTEA
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import MetaData
+from sqlalchemy.dialects.postgresql import UUID, VARCHAR, TIMESTAMP, INTEGER, BOOLEAN, BYTEA
 
 metadata = MetaData()
-
-Base = declarative_base()
 
 users = Table('users', metadata,
               Column('id', UUID, primary_key=True, unique=True),
