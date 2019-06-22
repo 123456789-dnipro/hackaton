@@ -1,1 +1,1 @@
-gunicorn myapp:app --worker-class sanic.worker.GunicornWorker
+web: gunicorn myapp:app --worker-class sanic.worker.GunicornWorker
