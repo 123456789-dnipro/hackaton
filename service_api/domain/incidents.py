@@ -7,7 +7,7 @@ from sanic.log import logger
 from service_api.domain.models import incedents
 from service_api.domain.models import vehicles, files
 from service_api.domain.sms_notifier import SMSNotifier
-from service_api.domain.redis import redis
+from service_api.domain.redis import RedisWorker
 
 
 async def get_phone_number(car_number):
@@ -20,16 +20,13 @@ async def get_phone_number(car_number):
 
 
 class Incedent:
-    def __init__(self):
-        pass
+    def __init__(self, headers):
+        self.headers = headers
 
     async def change_incident_status(self, *args, **kwargs):
         return 'OK'
 
-    async def get_incidents(headers, longitude, latitude):
-        return 'OK'
-
-    async def report_incident(self, headers=None, longitude=None, latitude=None, image=None, car_number=None,
+    async def report_incident(self, longitude=None, latitude=None, image=None, car_number=None,
                               comment=None):
         phone_number = await get_phone_number(car_number)
         if phone_number:
@@ -61,17 +58,16 @@ class Incedent:
                                           logituide=longitude,
                                           latitude=latitude,
                                           created_at=datetime.now(),
-                                          created_by=await get_user_id())  # REMAKE THIS
-        await pg.fetchrow(query)  # save incedent
+                                          created_by=await RedisWorker().get_user(self.headers().get('Authorization')))
+        await pg.fetchrow(query)
 
     async def save_files(self, image=None, comment=None, passport_data=None):
         query = files.insert().values(id=uuid.uuid4(),
                                       name=uuid.uuid4(),
                                       data=image.body,
                                       passport_data=passport_data,
-                                      user_id=await get_user_id()
-                                      )
-        await pg.fetchrow(query)  # save incedent
+                                      user_id=await RedisWorker().get_user(self.headers().get('Authorization')))
+        await pg.fetchrow(query)
 
 
 async def get_user_id():
