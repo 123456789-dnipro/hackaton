@@ -5,7 +5,7 @@ FIXTURES_PATH = 'tests/fixtures'
 MODELS = 'service_api/domain/models'
 
 API_PREFIX = 'chats'
-
+DB_NAME = os.getenv('DB_NAME')
 
 # SMS settings
 send_sms_path = 'http://api.myatompark.com/members/sms/xml.php'
