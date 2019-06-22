@@ -1,3 +1,7 @@
+import decimal
+import uuid
+import collections
+
 from sanic.constants import HTTP_METHODS
 from sanic.response import text, json
 from sanic.views import HTTPMethodView
