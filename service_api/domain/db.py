@@ -38,5 +38,5 @@ async def get_pool():
             'database': app.config.DB_NAME,
         }
         await pg.init(db_creds)
-        pool = await asyncpgsa.create_pool(**db_creds)
+        pool = await asyncpgsa.create_pool(db_creds)
     return pool
