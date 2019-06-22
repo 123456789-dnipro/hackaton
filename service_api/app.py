@@ -1,3 +1,5 @@
+from asyncpgsa import pg
+
 from sanic import Sanic
 
 from service_api import api
@@ -11,18 +13,13 @@ app.config.from_object(AppConfig)
 api.load_api(app)
 
 
-# @app.listener('after_server_start')
-# async def setup_db(app, loop):
-#     app.pool = await get_pool()
-#     await redis.init(app)
-#
-#
-# @app.listener('before_server_stop')
-# async def clone_connection(app, loop):
-#     await app.pool.close()
-#     await redis.close()
-#
-#
-# @app.middleware('request')
-# async def add_engine(request):
-#     request['pool'] = app.pool
+@app.listener('before_server_start')
+async def setup_db(app, loop):
+    await pg.init(app.config.DB_URI)
+    await redis.init(app)
+
+
+@app.listener('after_server_stop')
+async def clone_connection(app, loop):
+    await pg.pool.close()
+    await redis.close()
