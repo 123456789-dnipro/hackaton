@@ -23,8 +23,3 @@ async def setup_db(app, loop):
 async def clone_connection(app, loop):
     await pg.pool.close()
     await redis.close()
-
-
-@app.middleware('request')
-async def add_engine(request):
-    request['pool'] = app.pool
