@@ -16,13 +16,14 @@ class IncidentsResource(BaseResource):
     decorators = [prepare_coordinates]
 
     async def get(self, request, longitude, latitude):
-        incidents = get_incidents(request.headers, longitude, latitude)
+        incidents = await get_incidents(longitude, latitude)
         return json(incidents, HTTPStatus.OK)
 
     async def post(self, request, longitude, latitude):
         image = request.files.get('image')
         car_number = request.form.get('plate_number')
         comments = request.form.get('comments')
+        print(image)
         incident, status = report_incident(request.headers, longitude, latitude, image, car_number, comments)
         return json(incident, status)
 
