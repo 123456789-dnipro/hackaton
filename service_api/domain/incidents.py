@@ -36,7 +36,7 @@ async def get_phone_number(car_number):
 
 class Incedent:
     def __init__(self, headers):
-        self.headers = headers
+        self.headers = dict(headers)
 
     async def get_incidents(self, longitude, latitude):
         max_longitude = longitude + 0.01799
@@ -109,7 +109,7 @@ class Incedent:
                                           longitude_1=longitude,
                                           latitude_1=latitude,
                                           created_at=datetime.now(),
-                                          created_by=await RedisWorker().get_user(self.headers().get('Authorization')))
+                                          created_by=await RedisWorker().get_user(self.headers.get('Authorization')))
         await pg.fetchrow(query)
 
     async def save_files(self, incident_uuid, image=None, comment=None, passport_data=None):
@@ -117,5 +117,5 @@ class Incedent:
                                       name=uuid.uuid4(),
                                       data=image.body,
                                       passport_data=passport_data,
-                                      user_id=await RedisWorker().get_user(self.headers().get('Authorization')))
+                                      user_id=await RedisWorker().get_user(self.headers.get('Authorization')))
         await pg.fetchrow(query)
