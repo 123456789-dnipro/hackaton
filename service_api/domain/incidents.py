@@ -110,7 +110,7 @@ class Incedent:
                                           latitude_1=latitude,
                                           created_at=datetime.now(),
                                           comment=comment,
-                                          created_by=await redis.get_user(self.auth))
+                                          created_by=self.auth)
         await pg.fetchrow(query)
 
         query = incedents_points.insert().values(id=incident_uuid,
@@ -122,5 +122,5 @@ class Incedent:
                                       name=uuid.uuid4(),
                                       data=image.body,
                                       passport_data=passport_data,
-                                      user_id=await redis.get_user(self.auth))
+                                      user_id=self.auth)
         await pg.fetchrow(query)

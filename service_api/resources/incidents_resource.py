@@ -22,14 +22,12 @@ class IncidentsResource(BaseResource):
         image = request.json.get('photo')
         car_number = request.json.get('plate')
         comments = request.json.get('comments')
-        print(request.json.get('lng'))
-        print(request.json.get('lat'))
-        print(type(request.json.get('lat')))
         longitude = float(request.json.get('lng'))
         latitude = float(request.json.get('lat'))
-        print(request.headers)
-        print(request.headers.get('Authorization'))
-        incident, status = await Incedent(auth=request.headers.get('Authorization')).report_incident(
+        import uuid
+
+
+        incident, status = await Incedent(auth=uuid.uuid4()).report_incident(
                                                     longitude=longitude,
                                                     latitude=latitude, image=image,
                                                     car_number=car_number,
