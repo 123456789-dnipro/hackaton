@@ -109,12 +109,8 @@ class Incedent:
                                           longitude=longitude,
                                           latitude=latitude,
                                           created_at=datetime.now(),
-                                          comment=comment,
+                                          comment='12321321',
                                           created_by=self.auth)
-        await pg.fetchrow(query)
-
-        query = incedents_points.insert().values(id=incident_uuid,
-                                                 comment=comment)
         await pg.fetchrow(query)
 
     async def save_files(self, incident_uuid, image=None, comment=None, passport_data=None):
