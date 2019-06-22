@@ -48,7 +48,7 @@ class LogInResource(BaseResource):
         await pg.fetchrow(query)
         code = generate_sms()
         await redis.set_conf_msg(data['phone'], code)
-        sms_notifier = SMSNotifier('registration', data['phone'], code)
+        sms_notifier = SMSNotifier('registration', data['phone'], str(code))
         await sms_notifier.send_sms_message()
         return json(None, 201)
 
