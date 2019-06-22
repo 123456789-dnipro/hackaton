@@ -26,7 +26,6 @@ class SMSNotifier:
                             msg_id=1231231,
                             phone_number=self.phone,
                             car_number=self.car_number)
-        print(t)
         return t
 
     async def translate_sms_message(self, template):

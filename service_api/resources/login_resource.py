@@ -18,7 +18,6 @@ class LogInResource(BaseResource):
     async def post(self, request):
         data, _ = LogInForm().load(request.json)
         check_request = users.select().where(users.c.phone == data['phone'])
-        print(data)
         if await pg.fetchrow(check_request):
             if data.get('conf_code'):
                 return await self.__login(data)
@@ -49,8 +48,6 @@ class LogInResource(BaseResource):
         await pg.fetchrow(query)
         code = generate_sms()
         await redis.set_conf_msg(data['phone'], code)
-        print(code)
-        print(type(code))
         sms_notifier = SMSNotifier('registration', data['phone'], code)
         await sms_notifier.send_sms_message()
         return json(None, 201)
