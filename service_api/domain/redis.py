@@ -30,8 +30,12 @@ class RedisWorker:
         return await self.__pool.get(token)
 
     async def create_session(self, user_id, token):
-        await self.__pool.set(token, user_id)
-        await self.__pool.expire(token, 300)
+        cur_token = await self.__pool.get(user_id)
+        if not cur_token:
+            await self.__pool.set(token, user_id)
+            await self.__pool.expire(token, 300)
+        else:
+            token = cur_token
         return token
 
     async def close(self):
