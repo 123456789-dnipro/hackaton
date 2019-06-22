@@ -11,7 +11,7 @@ class BaseForm(Schema):
 
 class LogInForm(BaseForm):
     phone = fields.Str(required=True)
-    conf_code = fields.Int()
+    conf_code = fields.Str()
 
 
 class IncidentsStatusForm(BaseForm):
