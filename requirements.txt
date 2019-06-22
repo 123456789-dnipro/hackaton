@@ -1,3 +1,4 @@
+alembic
 aiofiles==0.4.0
 aioredis==1.2.0
 async-timeout==3.0.1
