@@ -31,7 +31,7 @@ class LogInResource(BaseResource):
             check_request = users.select().where(users.c.phone == data['phone'])
             user = await pg.fetchrow(check_request)
             token = self.__create_token(data['phone'], data['conf_code'])
-            user_id = user['user_id']
+            user_id = user['id']
             await redis.create_session(str(user_id), token)
             data = {
                 'id': str(user_id),
