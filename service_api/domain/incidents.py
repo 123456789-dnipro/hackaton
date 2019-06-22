@@ -1,10 +1,13 @@
-from service_api.sms_notification.send_sms import SMSNotifier
-from service_api.domain.models import vehicles, incedents, files
-from sanic.log import logger
 import uuid
 from datetime import datetime
-from service_api.domain.models import incedents
+
 from asyncpgsa import pg
+from sanic.log import logger
+
+from service_api.domain.models import incedents
+from service_api.domain.models import vehicles, files
+from service_api.domain.sms_notifier import SMSNotifier
+
 
 async def get_phone_number(car_number):
     query = vehicles.select().where(vehicles.c.number == car_number)
@@ -40,7 +43,6 @@ class Incedent:
 
         return 'YES', 200
 
-
     async def get_incident(incident_id):
         query = incedents.select().where(incedents.c.id == incident_id)
         incident = await pg.fetchrow(query)
@@ -53,12 +55,12 @@ class Incedent:
             incident_dict = []
         return incident_dict
 
-    async def save_incedent(self, latitude, longitude,):
+    async def save_incedent(self, latitude, longitude, ):
         query = incedents.insert().values(id=uuid.uuid4(),
                                           logituide=longitude,
                                           latitude=latitude,
                                           created_at=datetime.now(),
-                                          created_by= await get_user_id())  # REMAKE THIS
+                                          created_by=await get_user_id())  # REMAKE THIS
         await pg.fetchrow(query)  # save incedent
 
     async def save_files(self, image=None, comment=None, passport_data=None):
@@ -66,9 +68,10 @@ class Incedent:
                                       name=uuid.uuid4(),
                                       data=image.body,
                                       passport_data=passport_data,
-                                      user_id= await get_user_id()
+                                      user_id=await get_user_id()
                                       )
         await pg.fetchrow(query)  # save incedent
+
 
 async def get_user_id():
     return '4fbff866-3ba5-40ca-9ed8-7ed63f0621ef'

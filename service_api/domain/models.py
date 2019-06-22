@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Table
 from sqlalchemy import MetaData
-from sqlalchemy.dialects.postgresql import UUID, VARCHAR, TIMESTAMP, INTEGER, BOOLEAN, BYTEA
+from sqlalchemy.dialects.postgresql import UUID, VARCHAR, TIMESTAMP, INTEGER, BOOLEAN, BYTEA, FLOAT
 
 metadata = MetaData()
 
@@ -25,8 +25,8 @@ incedents = Table('incedents', metadata,
                   Column('id', UUID, primary_key=True, unique=True),
                   Column('created_at', TIMESTAMP),
                   Column('created_by', UUID),
-                  Column('logituide', INTEGER), # TODO rename
-                  Column('latitude', INTEGER))
+                  Column('longitude', FLOAT),
+                  Column('latitude', FLOAT))
 
 incedents_points = Table('incedents_points', metadata,
                          Column('id', UUID, primary_key=True, unique=True))
