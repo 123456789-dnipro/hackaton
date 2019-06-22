@@ -24,7 +24,7 @@ class LogInResource(BaseResource):
         return await self.__registration(data)
 
     async def __login(self, data):
-        if redis.get_conf_msg(data['phone'], data.get('conf_code')):
+        if redis.get_conf_msg(data['phone'], data.get('conf_code')) and data.get('conf_code'):
             check_request = users.select().where(users.c.phone == data['phone'])
             user = await pg.fetchrow(check_request)
             token = self.__create_token(data['phone'], data['conf_code'])
