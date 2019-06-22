@@ -34,8 +34,8 @@ async def get_phone_number(car_number):
 
 
 class Incedent:
-    def __init__(self, headers=None):
-        self.headers = headers if headers else None
+    def __init__(self, auth=None):
+        self.auth = auth if auth else None
 
     async def get_incidents(self, longitude, latitude):
         max_longitude = longitude + 0.01799
@@ -110,7 +110,7 @@ class Incedent:
                                           latitude_1=latitude,
                                           created_at=datetime.now(),
                                           comment=comment,
-                                          created_by=await redis.get_user(self.headers.get('Authorization')))
+                                          created_by=await redis.get_user(self.auth))
         await pg.fetchrow(query)
 
         query = incedents_points.insert().values(id=incident_uuid,
@@ -122,5 +122,5 @@ class Incedent:
                                       name=uuid.uuid4(),
                                       data=image.body,
                                       passport_data=passport_data,
-                                      user_id=await redis.get_user(self.headers.get('Authorization')))
+                                      user_id=await redis.get_user(self.auth))
         await pg.fetchrow(query)

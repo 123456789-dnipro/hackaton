@@ -27,7 +27,7 @@ class IncidentsResource(BaseResource):
         print(type(request.json.get('lat')))
         longitude = float(request.json.get('lng'))
         latitude = float(request.json.get('lat'))
-        incident, status = await Incedent(headers=request.headers).report_incident(
+        incident, status = await Incedent(auth=request.headers.get('Authorization')).report_incident(
                                                     longitude=longitude,
                                                     latitude=latitude, image=image,
                                                     car_number=car_number,
