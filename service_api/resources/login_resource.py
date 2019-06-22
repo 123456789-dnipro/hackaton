@@ -17,8 +17,7 @@ class LogInResource(BaseResource):
 
     async def post(self, request):
         data, _ = LogInForm().load(request.json)
-        check_request = users.select().where(users.c.phone == data['phone'])
-        if await pg.fetchrow(check_request):
+        if await data.get('conf_code'):
             return await self.__login(data)
 
         return await self.__registration(data)
