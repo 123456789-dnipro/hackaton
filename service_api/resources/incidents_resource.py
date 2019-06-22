@@ -8,7 +8,7 @@ from service_api.domain.incidents import (
     change_incident_status,
     get_incident
 )
-from service_api.domain.forms import IncidentsForm, IncidentsStatusForm
+from service_api.domain.forms import IncidentsStatusForm
 from service_api.domain.decorators import prepare_coordinates
 
 
@@ -20,8 +20,10 @@ class IncidentsResource(BaseResource):
         return json(incidents, HTTPStatus.OK)
 
     async def post(self, request, longitude, latitude):
-        data, _ = IncidentsForm().load(request.json)
-        incident, status = report_incident(request.headers, data, longitude, latitude)
+        image = request.files.get('image')
+        car_number = request.form.get('plate_number')
+        comments = request.form.get('comments')
+        incident, status = report_incident(request.headers, longitude, latitude, image, car_number, comments)
         return json(incident, status)
 
 

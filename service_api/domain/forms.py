@@ -14,10 +14,5 @@ class LogInForm(BaseForm):
     password = fields.Str(required=True)
 
 
-class IncidentsForm(BaseForm):
-    car_number = fields.Str(required=True)
-    comments = fields.Str(required=False)
-
-
 class IncidentsStatusForm(BaseForm):
     status = fields.Str(required=True)
