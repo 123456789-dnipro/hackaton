@@ -17,7 +17,7 @@ class LogInResource(BaseResource):
 
     async def post(self, request):
         data, _ = LogInForm().load(request.json)
-        q = users.c.phone == data['phone']
+        q = users.select().where(users.c.phone == data['phone'])
         if await pg.fetchrow(q) is not None:
             return await self.__login(data)
 
