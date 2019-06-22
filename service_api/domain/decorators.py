@@ -19,21 +19,6 @@ def authorized(f):
     return check_authorization
 
 
-def prepare_coordinates(f):
-    @wraps(f)
-    async def wrapper(request, *args, **kwargs):
-        longitude = request.args.get('lng')
-        latitude = request.args.get('lat')
-        if longitude and latitude:
-            longitude = float(longitude.replace(',', '.'))
-            latitude = float(latitude.replace(',', '.'))
-            return await f(request, longitude, latitude, *args, **kwargs)
-        else:
-            return json('Wrong coordinate parameters', HTTPStatus.UNPROCESSABLE_ENTITY)
-
-    return wrapper
-
-
 def asyncio_task(f):
     @wraps(f)
     async def wraper(f, *args, **kwargs):

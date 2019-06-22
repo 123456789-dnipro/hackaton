@@ -43,7 +43,7 @@ class Incedent:
         max_latitude = latitude + 0.01799
         min_latitude = latitude - 0.01799
         query = incedents.select().where(and_(
-            incedents.c.logituide <= max_longitude, incedents.c.logituide >= min_longitude,
+            incedents.c.longitude <= max_longitude, incedents.c.longitude >= min_longitude,
             incedents.c.latitude <= max_latitude, incedents.c.latitude >= min_latitude
         ))
         incidents_obj_list = await pg.fetch(query)
