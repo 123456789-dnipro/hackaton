@@ -16,10 +16,10 @@ api.load_api(app)
 @app.listener('before_server_start')
 async def setup_db(app, loop):
     await pg.init(app.config.DB_URI)
-    await redis.init(app)
+    #await redis.init(app)
 
 
 @app.listener('after_server_stop')
 async def clone_connection(app, loop):
     await pg.pool.close()
-    await redis.close()
+    #await redis.close()
