@@ -13,4 +13,5 @@ def load_api(app: Sanic):
     api.add_route(LogInResource.as_view(), '/login')
     api.add_route(IncidentResource.as_view(), '/incidents/<incident_id:uuid>')
     api.add_route(IncidentsResource.as_view(), '/incidents')
+    api.add_route(None, 'cars')
     app.blueprint(api)
