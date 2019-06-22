@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Table
-from sqlalchemy.dialects.postgresql import UUID, VARCHAR, ARRAY, TIMESTAMP, INTEGER, BOOLEAN
-from sqlalchemy.types import BINARY
+from sqlalchemy.dialects.postgresql import UUID, VARCHAR, ARRAY, TIMESTAMP, INTEGER, BOOLEAN, BYTEA
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import MetaData
 
@@ -19,8 +18,8 @@ users = Table('users', metadata,
 photos = Table('files', metadata,
                Column('image_id', UUID, primary_key=True, unique=True),
                Column('image_name', UUID),
-               Column('image_data', BINARY),
-               Column('passport_data', BINARY),
+               Column('image_data', BYTEA),
+               Column('passport_data', BYTEA),
                Column('user_id', UUID))
 
 vehicles = Table('vehicle', metadata,
