@@ -7,4 +7,4 @@ def generate_uuid():
 
 
 def generate_sms():
-    return randint(99999, 999999)
+    return randint(999, 9999)
