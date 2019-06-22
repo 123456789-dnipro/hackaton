@@ -35,7 +35,8 @@ async def get_pool():
             # 'password': app.config.DB_PASSWORD,
             'host': app.config.DB_HOST,
             # 'port': app.config.DB_PORT,
-            # 'database': app.config.DB_NAME
+            # 'database': app.config.DB_NAME,
+            'ssl': True
         }
         await pg.init(**db_creds)
         pool = await asyncpgsa.create_pool(**db_creds)
