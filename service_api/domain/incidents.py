@@ -7,7 +7,7 @@ from sanic.log import logger
 
 from service_api.domain.models import vehicles, incedents_points
 from service_api.domain.sms_notifier import SMSNotifier
-from service_api.domain.redis import RedisWorker
+from service_api.domain.redis import redis
 from service_api.domain.models import incedents, files
 
 
@@ -110,7 +110,7 @@ class Incedent:
                                           latitude_1=latitude,
                                           created_at=datetime.now(),
                                           comment=comment,
-                                          created_by=await RedisWorker().get_user(self.headers.get('Authorization')))
+                                          created_by=await redis.get_user(self.headers.get('Authorization')))
         await pg.fetchrow(query)
 
         query = incedents_points.insert().values(id=incident_uuid,
@@ -122,5 +122,5 @@ class Incedent:
                                       name=uuid.uuid4(),
                                       data=image.body,
                                       passport_data=passport_data,
-                                      user_id=await RedisWorker().get_user(self.headers.get('Authorization')))
+                                      user_id=await redis.get_user(self.headers.get('Authorization')))
         await pg.fetchrow(query)
