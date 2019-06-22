@@ -7,6 +7,7 @@ from sanic.log import logger
 from service_api.domain.models import incedents
 from service_api.domain.models import vehicles, files
 from service_api.domain.sms_notifier import SMSNotifier
+from service_api.domain.redis import redis
 
 
 async def get_phone_number(car_number):
