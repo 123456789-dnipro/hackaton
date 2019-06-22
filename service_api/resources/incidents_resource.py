@@ -31,7 +31,7 @@ class IncidentResource(BaseResource):
     decorators = []
 
     async def get(self, request, incident_id):
-        incident = get_incident(request.headers, incident_id)
+        incident = await get_incident(incident_id)
         return json(incident, HTTPStatus.OK)
 
     async def put(self, request):
