@@ -1,4 +1,4 @@
-from constans import login, password, phone_sms, send_sms_header
+from constans import login, password, send_sms_header
 from urllib.parse import urlencode
 from constans import send_sms_path
 import aiohttp
@@ -21,7 +21,7 @@ class SMSNotifier:
                             password=password,
                             code=self.code,
                             msg_id=1231231,
-                            phone_number=phone_sms,
+                            phone_number=self.phone,
                             car_number=self.car_number)
         return t
 
