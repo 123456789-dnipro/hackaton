@@ -19,8 +19,8 @@ class IncidentsResource(BaseResource):
         car_number = request.form.get('plate_number')
         comments = request.form.get('comments')
         incident, status = await Incedent(headers=request.headers).report_incident(
-                                                    longitude=float(longitude),
-                                                    latitude=float(latitude), image=image,
+                                                    longitude=longitude,
+                                                    latitude=latitude, image=image,
                                                     car_number=car_number,
                                                     comment=comments)
         return json(incident, status)

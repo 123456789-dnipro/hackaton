@@ -55,8 +55,8 @@ class Incedent:
 
     async def save_incedent(self, latitude, longitude, ):
         query = incedents.insert().values(id=uuid.uuid4(),
-                                          logituide=longitude,
-                                          latitude=latitude,
+                                          longitude_1=longitude,
+                                          latitude_1=latitude,
                                           created_at=datetime.now(),
                                           created_by=await RedisWorker().get_user(self.headers().get('Authorization')))
         await pg.fetchrow(query)
