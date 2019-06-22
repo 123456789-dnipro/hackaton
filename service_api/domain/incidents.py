@@ -5,8 +5,7 @@ from asyncpgsa import pg
 from sqlalchemy import and_
 from sanic.log import logger
 
-from service_api.domain.models import incedents
-from service_api.domain.models import vehicles, files
+from service_api.domain.models import vehicles, incedents_points
 from service_api.domain.sms_notifier import SMSNotifier
 from service_api.domain.redis import RedisWorker
 from service_api.domain.models import incedents, files
@@ -35,8 +34,8 @@ async def get_phone_number(car_number):
 
 
 class Incedent:
-    def __init__(self, headers):
-        self.headers = dict(headers)
+    def __init__(self, headers=None):
+        self.headers = headers if headers else None
 
     async def get_incidents(self, longitude, latitude):
         max_longitude = longitude + 0.01799
@@ -44,7 +43,8 @@ class Incedent:
         max_latitude = latitude + 0.01799
         min_latitude = latitude - 0.01799
         query = incedents.select().where(and_(
-            incedents.c.logituide <= max_longitude, incedents.c.logituide >= min_longitude, incedents.c.latitude <= max_latitude, incedents.c.latitude >= min_latitude
+            incedents.c.logituide <= max_longitude, incedents.c.logituide >= min_longitude,
+            incedents.c.latitude <= max_latitude, incedents.c.latitude >= min_latitude
         ))
         incidents_obj_list = await pg.fetch(query)
         incidents_list = []
@@ -83,7 +83,7 @@ class Incedent:
             except:
                 logger.info('Failed to send SMS')
         incident_uuid = uuid.uuid4()
-        await self.save_incident(incident_uuid, latitude, longitude)
+        await self.save_incident(incident_uuid, latitude, longitude, comment)
         await self.save_files(incident_uuid, image, comment)
 
         return 'YES', 200
@@ -104,12 +104,17 @@ class Incedent:
             incident_dict = []
         return incident_dict
 
-    async def save_incident(self, incident_uuid, latitude, longitude, ):
+    async def save_incident(self, incident_uuid, latitude, longitude, comment):
         query = incedents.insert().values(id=incident_uuid,
                                           longitude_1=longitude,
                                           latitude_1=latitude,
                                           created_at=datetime.now(),
+                                          comment=comment,
                                           created_by=await RedisWorker().get_user(self.headers.get('Authorization')))
+        await pg.fetchrow(query)
+
+        query = incedents_points.insert().values(id=incident_uuid,
+                                                 comment=comment)
         await pg.fetchrow(query)
 
     async def save_files(self, incident_uuid, image=None, comment=None, passport_data=None):
