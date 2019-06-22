@@ -35,7 +35,6 @@ class LogInResource(BaseResource):
             await redis.create_session(str(user_id), token)
             data = {
                 'id': str(user_id),
-                'user_name': user['user_name'],
                 'credentials': token
             }
             return json(data, 201)
