@@ -6,11 +6,7 @@ metadata = MetaData()
 
 users = Table('users', metadata,
               Column('id', UUID, primary_key=True, unique=True),
-              Column('email', VARCHAR),
-              Column('phone', VARCHAR, unique=True),
-              Column('name', VARCHAR),
-              Column('comfirmed', BOOLEAN),
-              Column('comfirm_code', BOOLEAN))
+              Column('phone', VARCHAR, unique=True))
 
 files = Table('files', metadata,
                Column('id', UUID, primary_key=True, unique=True),

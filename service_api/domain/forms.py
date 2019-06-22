@@ -10,8 +10,8 @@ class BaseForm(Schema):
 
 
 class LogInForm(BaseForm):
-    user_name = fields.Str(required=True)
-    password = fields.Str(required=True)
+    phone = fields.Str(required=True)
+    conf_code = fields.Int()
 
 
 class IncidentsStatusForm(BaseForm):

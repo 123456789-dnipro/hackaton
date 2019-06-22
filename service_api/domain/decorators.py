@@ -1,5 +1,6 @@
-from http import HTTPStatus
+import asyncio
 from functools import wraps
+from http import HTTPStatus
 
 from sanic.response import text, json
 
@@ -29,4 +30,14 @@ def prepare_coordinates(f):
             return await f(request, longitude, latitude, *args, **kwargs)
         else:
             return json('Wrong coordinate parameters', HTTPStatus.UNPROCESSABLE_ENTITY)
+
     return wrapper
+
+
+def asyncio_task(f):
+    @wraps(f)
+    async def wraper(f, *args, **kwargs):
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(f(*args, **kwargs))
+
+    return wraper
