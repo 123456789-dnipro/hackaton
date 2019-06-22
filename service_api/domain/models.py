@@ -35,6 +35,6 @@ incedents = Table('incedents', metadata,
                   Column('latitude', INTEGER))
 
 incedents_points = Table('incedents_points', metadata,
-                         Column('incedent_point_id', UUID, primary_key=True, unique=True))
+                         Column('id', UUID, primary_key=True, unique=True))
 
 models = [users, photos, vehicles, incedents, incedents_points]
