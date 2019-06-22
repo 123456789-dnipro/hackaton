@@ -4,15 +4,18 @@ from sanic.response import json
 from service_api.resources import BaseResource
 from service_api.domain.incidents import Incedent
 from service_api.domain.forms import IncidentsStatusForm
-from service_api.domain.decorators import prepare_coordinates
 
 
 class IncidentsResource(BaseResource):
     decorators = []
 
-    @prepare_coordinates
-    async def get(self, request, longitude, latitude):
-        incidents = Incedent.get_incidents(request.headers, longitude, latitude)
+    async def get(self, request):
+        longitude = request.args.get('lng')
+        latitude = request.args.get('lat')
+        if longitude and latitude:
+            longitude = float(longitude.replace(',', '.'))
+            latitude = float(latitude.replace(',', '.'))
+        incidents = await Incedent.get_incidents(request.headers, longitude, latitude)
         return json(incidents, HTTPStatus.OK)
 
     async def post(self, request):
