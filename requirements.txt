@@ -2,7 +2,7 @@ alembic
 aiofiles==0.4.0
 aioredis==1.2.0
 async-timeout==3.0.1
-asyncpg==0.18.3
+asyncpg==0.21.0
 asyncpgsa==0.26.0
 aiohttp==3.5.4
 certifi==2019.6.16
